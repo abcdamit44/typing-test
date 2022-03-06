@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typing Speed Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        }
+        
+        .main {
+            width: 100%;
+            height: 100vh;
+            background-color: royalblue;
+            position: relative;
+        }
+        
+        .center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        
+        h1 {
+            color: #fff;
+            margin-bottom: 20px;
+        }
+        
+        h2 {
+            color: rgb(36, 36, 36);
+            margin-bottom: 20px;
+        }
+        
+        textarea {
+            background-color: rgb(36, 36, 36);
+            border: 10px solid rgb(0, 0, 46);
+            border-radius: 10px 10px 0 0;
+            outline: none;
+            color: #fff;
+            padding: 10px;
+        }
+        
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border-radius: 30px;
+            color: #fff;
+            background-color: rgb(0, 0, 46);
+            box-shadow: 0px 0px 2px 2px #fff;
+            border: 0;
+            outline: 0;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <div class="center">
+            <h1>Welcome to Typing Speed Test</h1>
+            <h2 id="randomText"></h2>
+            <textarea id="textField" cols="100" rows="15" placeholder="Enter text to check your speed..."></textarea>
+            <br>
+            <button id="btn">Start</button>
+        </div>
+    </div>
+
+    <script>
+        const setOfWords = [
+            "Jim liked driving around town with his hazard lights on.",
+            "Let me help you with your baggage.",
+            "He didn't want to go to the dentist yet he went anyway.",
+            "He used to get confused between soldiers and shoulders, but as a military man",
+            "he now soldiers responsibility.",
+            "I want a giraffe, but I'm a turtle eating waffles.",
+            "The shooter says goodbye to his love.",
+            "Her life in the confines of the house became her new normal.",
+            "Martha came to the conclusion that shake weights are a great gift for any occasion.",
+            "Gwen had her best sleep ever on her new bed of nails."
+        ];
+
+        const msg = document.getElementById("randomText");
+        const typedWords = document.getElementById("textField");
+        const btn = document.getElementById("btn");
+
+        let startTime, endTime;
+
+        let playGame = () => {
+            let randomNumber = Math.ceil(Math.random() * setOfWords.length - 1);
+            console.log(randomNumber)
+            msg.innerText = setOfWords[randomNumber];
+            let time = new Date();
+            startTime = time.getTime();
+            btn.innerText = "Done";
+            typedWords.value = "";
+
+        }
+        let wordCounter = (str) => {
+            let response = str.split(" ").length;
+            console.log(response)
+            return response;
+        }
+        let compareWords = (str1, str2) => {
+            let words1 = str1.split(" ");
+            let words2 = str2.split(" ");
+            let count = 0;
+
+            words1.forEach(function(item, index) {
+                if (item == words2[index]) {
+                    count++;
+                }
+            });
+            let errorWords = words1.length - count;
+            return (count + " correct out of " + words1.length + " words and the total number of error are " + errorWords + ".");
+        }
+        let endGame = () => {
+            let time = new Date();
+            endTime = time.getTime();
+            let totalTime = ((endTime - startTime) / 1000);
+            let totalStr = typedWords.value;
+            let wordCount = wordCounter(totalStr);
+            let speed = Math.round((wordCount / totalTime) * 60);
+            let finalMsg = " You typed total at " + speed + " words per minutes ";
+            finalMsg += compareWords(msg.innerText, totalStr);
+            msg.innerText = finalMsg;
+
+
+        }
+        btn.addEventListener("click", function() {
+            if (this.innerText == 'Start') {
+                typedWords.disabled = false;
+                playGame();
+            } else if (this.innerText == 'Done') {
+                typedWords.disabled = true;
+                btn.innerText = "Start";
+                endGame();
+            }
+        })
+    </script>
+</body>
+
+</html>
